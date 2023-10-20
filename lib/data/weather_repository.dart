@@ -11,12 +11,15 @@ class WeatherRepository {
   
   Future<List<WeatherSearchResponse>> searchLocation(String searchString) async {
     try{
-      return await client.dio.get<List<WeatherSearchResponse>>(
+      return await client.dio.get(
         'search.json',
         queryParameters: {'q': searchString},
       ).then((res) {
         if(res.statusCode == HttpStatus.ok){
-         return res.data ?? [];
+          if(res.data is List){
+            return (res.data as List).map((e) => WeatherSearchResponse.fromJson(e)).toList();
+          }
+          return [WeatherSearchResponse.fromJson(res.data)];
         }
         return [];
       });
