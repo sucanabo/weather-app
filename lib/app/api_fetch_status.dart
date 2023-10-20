@@ -1,0 +1,1 @@
+enum ApiFetchStatus {initial, success, fail}

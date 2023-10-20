@@ -8,9 +8,10 @@ const int _kSendTimeout = 15000;
 const int _kConnectTimeout = 15000;
 
 class WeatherAPIClient {
-  static late final Dio dio;
+  late Dio dio;
 
-  WeatherAPIClient._() {
+  static final WeatherAPIClient instance = WeatherAPIClient._internal();
+  WeatherAPIClient._internal() {
     dio = Dio(
       BaseOptions(
           baseUrl: baseUrl,
