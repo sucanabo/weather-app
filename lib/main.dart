@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/ui/hone_screen.dart';
+import 'package:weather_app/ui/home_screen.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/data/entities/weather_current_response.dart';
+import 'package:weather_app/utils/common_functions.dart';
 
 import '../../utils/app_colors.dart';
 
@@ -35,7 +36,7 @@ class _WeatherBackgroundState extends State<WeatherBackground> {
     initBgColor();
   }
   initBgColor(){
-    final timeIndex = calculateTime(widget.weather?.location?.localtime ?? DateTime.now());
+    final timeIndex = calculateTime(dateTimeOrNull(widget.weather?.location?.localtime) ?? DateTime.now());
     startColor = timeColors[timeIndex];
     if(timeIndex == timeColors.length - 1){
       endColor = timeColors[0];

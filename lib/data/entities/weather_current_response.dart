@@ -1,4 +1,4 @@
-import 'package:weather_app/utils/extensions.dart';
+import 'package:weather_app/utils/common_functions.dart';
 
 class WeatherCurrentResponse {
   final Location? location;
@@ -156,7 +156,7 @@ class Location {
   final double? lon;
   final String? tzId;
   final num? localtimeEpoch;
-  final DateTime? localtime;
+  final String? localtime;
 
   Location({
     this.name,
@@ -177,7 +177,7 @@ class Location {
     lon: json["lon"]?.toDouble(),
     tzId: json["tz_id"],
     localtimeEpoch: json["localtime_epoch"],
-    localtime: json["localtime"].dateTimeOrNull,
+    localtime: json["localtime"],
   );
 
   Map<String, dynamic> toJson() => {
