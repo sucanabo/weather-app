@@ -3,6 +3,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:weather_app/data/client/weather_api_client.dart';
 import 'package:weather_app/data/entities/weather_current_response.dart';
 import 'package:weather_app/data/weather_repository.dart';
+import 'package:weather_app/utils/diacritics_util.dart';
 
 import '../data/entities/weather_search_response.dart';
 import 'widgets/weather_background.dart';
@@ -112,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<List<WeatherSearchResponse>> search(String str) async {
     if(str.isEmpty) return [];
     try {
-      return await repo.searchLocation(str);
+      return await repo.searchLocation(str.withoutDiacritics);
     } catch (e) {
       debugPrint('Error search - $e');
       return [];
