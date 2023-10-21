@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/data/client/weather_api_client.dart';
 import 'package:weather_app/data/entities/weather_current_response.dart';
 import 'package:weather_app/data/weather_repository.dart';
 import 'package:weather_app/ui/widgets/search_weather_text_field.dart';
-import 'package:weather_app/utils/common_functions.dart';
+import 'package:weather_app/ui/widgets/weather_focast_widget.dart';
+import 'package:weather_app/ui/widgets/weather_temperture_info.dart';
 import 'package:weather_app/utils/diacritics_util.dart';
 import 'package:weather_app/utils/extension/context_extension.dart';
 import 'package:weather_app/utils/extension/widget_extension.dart';
 
 import '../data/entities/weather_search_response.dart';
-import '../utils/extension/date_time_extension.dart';
 import 'widgets/weather_background.dart';
+import 'widgets/weather_location_info.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,15 +24,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final repo = WeatherRepository(WeatherAPIClient.instance);
   final searchCtl = TextEditingController();
+  late final ScaffoldMessengerState _scaffoldKey;
 
   /// * data
   final List<WeatherSearchResponse> currentSearchResults = [];
+  Position? _userPosition;
   WeatherSearchResponse? _locationSelected;
   WeatherCurrentResponse? _currentWeather;
+
 
   @override
   void initState() {
     super.initState();
+    getCurrentPosition();
   }
 
   @override
@@ -40,42 +46,24 @@ class _HomeScreenState extends State<HomeScreen> {
         fit: StackFit.expand,
         children: [
           WeatherBackground(weather: _currentWeather),
-          Positioned(
-            top: context.safeTopHeight + 32,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SearchWeatherTextField(
-                controller: searchCtl,
-                onSearch: search,
-                onItemSelect: _onLocationSelected,
-              ),
-            ),
-          ),
-          Positioned(
-            top: context.sh * .18,
-            left: 0,
-            right: 0,
-            child: Container(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Text(
-                      _currentWeather?.location?.name ?? "Unknown City",
-                      style: context.textTheme.displayMedium,
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: context.safeTopHeight + 32),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SearchWeatherTextField(
+                    controller: searchCtl,
+                    onSearch: search,
+                    onItemSelect: _onLocationSelected,
                   ),
-                  Text(
-                      '${_currentWeather?.location?.country ?? 'Unknown Country'} - ${(dateTimeOrNull(_currentWeather?.location?.localtime) ?? DateTime.now()).uiDate}',
-                      style: context.textTheme.titleMedium,
-                  ),
-                  20.vBox,
-                  Text(
-                    '${_currentWeather?.current?.tempC ?? '0'}',
-                    style: const TextStyle(fontSize: 70, color: Colors.white),
-                  ).withSuperscript(' \u2103', const TextStyle(fontSize: 45, color: Colors.white))
-                ],
-              ),
+                ),
+                (context.sh * .05).vBox,
+                WeatherLocationInfo(info: _currentWeather?.location),
+                (context.sh * .05).vBox,
+                WeatherTempInfo(info: _currentWeather?.current),
+                WeatherForecastWidget()
+              ],
             ),
           ),
         ],
@@ -83,11 +71,17 @@ class _HomeScreenState extends State<HomeScreen> {
     ).unFocusOutsideClick(context);
   }
 
-  _onLocationSelected(WeatherSearchResponse locationSelected){
-    _locationSelected = locationSelected;
-    getCurrentWeather(locationSelected.lat ?? 0, locationSelected.lon ?? 0);
+  Future<void> getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      _userPosition = position;
+      getCurrentWeather(position.latitude, position.longitude);
+    }).catchError((e) {
+      debugPrint('error - getCurrentPosition$e');
+    });
   }
-
   Future<void> getCurrentWeather(num lat, num lng) async {
     try{
       return await repo.getWeatherByLatLng(lat, lng).then((res){
@@ -108,5 +102,36 @@ class _HomeScreenState extends State<HomeScreen> {
       debugPrint('Error search - $e');
       return [];
     }
+  }
+
+  _onLocationSelected(WeatherSearchResponse locationSelected){
+    _locationSelected = locationSelected;
+    getCurrentWeather(locationSelected.lat ?? 0, locationSelected.lon ?? 0);
+  }
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      _scaffoldKey.showSnackBar(const SnackBar(
+          content: Text('Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        _scaffoldKey.showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      _scaffoldKey.showSnackBar(const SnackBar(
+          content: Text('Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
   }
 }

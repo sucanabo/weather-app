@@ -12,6 +12,7 @@ dependencies:
   intl:
   dio:
   flutter_typeahead:
+  geolocator:
 
 dev_dependencies:
   flutter_test:

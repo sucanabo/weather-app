@@ -16,3 +16,14 @@ DateTime? dateTimeOrNull(dynamic val){
       return null;
     }
 }
+
+String removeZeroDouble(num number){
+  if(number == 0) return '0';
+  RegExp regex = RegExp(r'([.]*0)(?!.*\d)');
+  return number.toString().replaceAll(regex, '');
+}
+
+String addSchemeImgHost(String? url){
+  if(url == null || url.isEmpty || !url.contains('//cdn.weatherapi.com')) return '';
+  return 'https:$url';
+}
