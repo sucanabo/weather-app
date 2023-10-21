@@ -6,6 +6,6 @@ class AppColors{
   static const Color lateMorningColor = Color(0xffc98129);
   static const Color earlyAfternoon = Color(0xff5498c4);
   static const Color lateAfternoonColor = Color(0xff646ebd);
-  static const Color eveningColor = Color(0xff6c30a2);
-  static const Color nightColor = Color(0xff3a123d);
+  static const Color eveningColor = Color(0xff59238c);
+  static const Color nightColor = Color(0xff211e21);
 }

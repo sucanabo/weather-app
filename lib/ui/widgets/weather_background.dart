@@ -27,14 +27,26 @@ class _WeatherBackgroundState extends State<WeatherBackground> {
     AppColors.nightColor,
   ];
   int timeIndex = 0;
-  Color startColor = AppColors.earlyMorningColor;
-  Color endColor = AppColors.nightColor;
+  late Color startColor;
+  late Color endColor;
 
   @override
   void initState() {
     super.initState();
     initBgColor();
   }
+
+
+  @override
+  void didUpdateWidget(WeatherBackground oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print('old : ${oldWidget.weather?.location?.localtimeEpoch}');
+    print('new : ${widget.weather?.location?.localtimeEpoch}');
+    if(oldWidget.weather?.location?.localtimeEpoch != widget.weather?.location?.localtimeEpoch){
+      initBgColor();
+    }
+  }
+
   initBgColor(){
     final timeIndex = calculateTime(dateTimeOrNull(widget.weather?.location?.localtime) ?? DateTime.now());
     startColor = timeColors[timeIndex];
@@ -48,16 +60,16 @@ class _WeatherBackgroundState extends State<WeatherBackground> {
 
   int calculateTime(DateTime dateTime){
     final h = dateTime.hour;
-    if(h < 5 || h > 20) return 5;
+    if(h < 5) return 5;
     if(h < 9) return 0;
     if(h < 13) return 1;
     if(h < 16) return 2;
     if(h < 18) return 3;
-    if(h < 20) return 4;
-    return 0;
+    return 4;
   }
   @override
   Widget build(BuildContext context) {
+    print('rebuild: - ${widget.weather?.location?.localtime}');
     return AnimatedContainer(
       duration: widget.duration,
       decoration: BoxDecoration(
