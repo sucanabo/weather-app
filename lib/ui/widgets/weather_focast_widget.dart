@@ -5,24 +5,15 @@ import 'package:weather_app/utils/extension/date_time_extension.dart';
 import 'package:weather_app/utils/extension/widget_extension.dart';
 
 import '../../utils/common_functions.dart';
-class WeatherForecastWidget extends StatefulWidget {
+class WeatherForecastWidget extends StatelessWidget {
   const WeatherForecastWidget({super.key,required this.forecast});
   final Forecast? forecast;
   @override
-  State<WeatherForecastWidget> createState() => _WeatherForecastWidgetState();
-}
-
-class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if(widget.forecast?.forecastDay == null || widget.forecast!.forecastDay.isEmpty) return const SizedBox.shrink();
-    return Container(
+    if(forecast?.forecastDay == null || forecast!.forecastDay.isEmpty) return const SizedBox.shrink();
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      height: forecast!.forecastDay.isEmpty ? 0 : null,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(.3),
         borderRadius: BorderRadius.circular(12),
@@ -53,10 +44,12 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (ctx, i) => _ForecastItem(forecastItem: widget.forecast!.forecastDay[i]),
+            itemBuilder: (ctx, i) => _ForecastItem(forecastItem: forecast!.forecastDay[i]),
             separatorBuilder: (ctx,i) => 4.vBox,
-            itemCount: widget.forecast?.forecastDay.length ?? 0,
-          )
+            itemCount: forecast?.forecastDay.length ?? 0,
+          ),
+          10.vBox,
+          FilledButton(onPressed: (){}, child: const Text('More Details')),
         ],
       ),
     );

@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:weather_app/data/client/weather_api_client.dart';
-import 'package:weather_app/data/entities/weather_response.dart';
 import 'package:weather_app/data/entities/location_search_response.dart';
+import 'package:weather_app/data/entities/weather_response.dart';
 
 class WeatherRepository {
   final WeatherAPIClient client;

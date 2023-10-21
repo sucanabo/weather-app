@@ -15,4 +15,9 @@ extension DateTimeEx on DateTime {
     DateFormat format = DateFormat('EEEE');
     return format.format(this);
   }
+
+  String get hourWithA {
+    DateFormat format = DateFormat('hh:mm a');
+    return format.format(this);
+  }
 }
