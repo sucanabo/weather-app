@@ -4,4 +4,15 @@ extension DateTimeEx on DateTime {
     DateFormat format = DateFormat('dd/MM/yyyy');
     return format.format(this);
   }
+  bool isSameDay(DateTime? other) {
+    return
+      year == other?.year &&
+          month == other?.month &&
+          day == other?.day;
+  }
+  String dayOfWeekStr ({bool todayReplace = false}){
+    if(DateTime.now().isSameDay(this) && todayReplace) return 'Today';
+    DateFormat format = DateFormat('EEEE');
+    return format.format(this);
+  }
 }

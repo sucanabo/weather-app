@@ -169,14 +169,14 @@ final windDirValues = EnumValues({
 });
 
 class Forecast {
-  final List<Forecastday> forecastDay;
+  final List<ForecastDay> forecastDay;
 
   Forecast({
     this.forecastDay = const [],
   });
 
   factory Forecast.fromJson(Map<String, dynamic> json) => Forecast(
-    forecastDay: json["forecastday"] == null ? [] : List<Forecastday>.from(json["forecastday"]!.map((x) => Forecastday.fromJson(x))),
+    forecastDay: json["forecastday"] == null ? [] : List<ForecastDay>.from(json["forecastday"]!.map((x) => ForecastDay.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -184,14 +184,14 @@ class Forecast {
   };
 }
 
-class Forecastday {
+class ForecastDay {
   final DateTime? date;
   final num? dateEpoch;
   final Day? day;
   final Astro? astro;
   final List<Hour>? hour;
 
-  Forecastday({
+  ForecastDay({
     this.date,
     this.dateEpoch,
     this.day,
@@ -199,7 +199,7 @@ class Forecastday {
     this.hour,
   });
 
-  factory Forecastday.fromJson(Map<String, dynamic> json) => Forecastday(
+  factory ForecastDay.fromJson(Map<String, dynamic> json) => ForecastDay(
     date: json["date"] == null ? null : DateTime.parse(json["date"]),
     dateEpoch: json["date_epoch"],
     day: json["day"] == null ? null : Day.fromJson(json["day"]),

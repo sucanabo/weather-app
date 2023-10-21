@@ -31,8 +31,11 @@ class WeatherRepository {
   Future<WeatherResponse?> getWeatherByLatLng(num lat, num lng) async {
     try{
       return await client.dio.get(
-        'current.json',
-        queryParameters: {'q': '$lat,$lng'},
+        'forecast.json',
+        queryParameters: {
+          'q': '$lat,$lng',
+          'days': 7,
+        },
       ).then((res) {
         if(res.statusCode == HttpStatus.ok){
           return WeatherResponse.fromJson(res.data);
