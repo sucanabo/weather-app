@@ -4,11 +4,11 @@
 
 import 'dart:convert';
 
-WeatherSearchResponse weatherSearchResponseFromJson(String str) => WeatherSearchResponse.fromJson(json.decode(str));
+LocationSearchResponse weatherSearchResponseFromJson(String str) => LocationSearchResponse.fromJson(json.decode(str));
 
-String weatherSearchResponseToJson(WeatherSearchResponse data) => json.encode(data.toJson());
+String weatherSearchResponseToJson(LocationSearchResponse data) => json.encode(data.toJson());
 
-class WeatherSearchResponse {
+class LocationSearchResponse {
   final int? id;
   final String? name;
   final String? region;
@@ -17,7 +17,7 @@ class WeatherSearchResponse {
   final double? lon;
   final String? url;
 
-  WeatherSearchResponse({
+  LocationSearchResponse({
     this.id,
     this.name,
     this.region,
@@ -27,7 +27,7 @@ class WeatherSearchResponse {
     this.url,
   });
 
-  factory WeatherSearchResponse.fromJson(Map<String, dynamic> json) => WeatherSearchResponse(
+  factory LocationSearchResponse.fromJson(Map<String, dynamic> json) => LocationSearchResponse(
     id: json["id"],
     name: json["name"],
     region: json["region"],

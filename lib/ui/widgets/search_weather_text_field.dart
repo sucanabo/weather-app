@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:weather_app/data/entities/weather_search_response.dart';
+import 'package:weather_app/data/entities/location_search_response.dart';
 import 'package:weather_app/utils/extension/context_extension.dart';
 class SearchWeatherTextField extends StatelessWidget {
   const SearchWeatherTextField({super.key, this.controller, required this.onSearch, required this.onItemSelect});
   final TextEditingController? controller;
-  final SuggestionsCallback<WeatherSearchResponse> onSearch;
-  final void Function(WeatherSearchResponse) onItemSelect;
+  final SuggestionsCallback<LocationSearchResponse> onSearch;
+  final void Function(LocationSearchResponse) onItemSelect;
 
   @override
   Widget build(BuildContext context) {
-    return TypeAheadFormField<WeatherSearchResponse>(
+    return TypeAheadFormField<LocationSearchResponse>(
       textFieldConfiguration: TextFieldConfiguration(
         controller: controller,
         textInputAction: TextInputAction.search,
@@ -39,7 +39,7 @@ class SearchWeatherTextField extends StatelessWidget {
       debounceDuration: const Duration(milliseconds: 150),
       suggestionsCallback: onSearch,
       itemSeparatorBuilder: (_, __) => const Divider(),
-      itemBuilder: (context, WeatherSearchResponse suggestion) {
+      itemBuilder: (context, LocationSearchResponse suggestion) {
         return Column(
           children: [
             ListTile(

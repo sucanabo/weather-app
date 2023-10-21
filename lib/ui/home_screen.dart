@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/data/client/weather_api_client.dart';
-import 'package:weather_app/data/entities/weather_current_response.dart';
+import 'package:weather_app/data/entities/weather_response.dart';
 import 'package:weather_app/data/weather_repository.dart';
 import 'package:weather_app/ui/widgets/search_weather_text_field.dart';
 import 'package:weather_app/ui/widgets/weather_focast_widget.dart';
 import 'package:weather_app/ui/widgets/weather_temperture_info.dart';
+import 'package:weather_app/utils/common_functions.dart';
 import 'package:weather_app/utils/diacritics_util.dart';
 import 'package:weather_app/utils/extension/context_extension.dart';
 import 'package:weather_app/utils/extension/widget_extension.dart';
 
-import '../data/entities/weather_search_response.dart';
+import '../data/entities/location_search_response.dart';
 import 'widgets/weather_background.dart';
 import 'widgets/weather_location_info.dart';
 
@@ -27,10 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   late final ScaffoldMessengerState _scaffoldKey;
 
   /// * data
-  final List<WeatherSearchResponse> currentSearchResults = [];
+  final List<LocationSearchResponse> currentSearchResults = [];
   Position? _userPosition;
-  WeatherSearchResponse? _locationSelected;
-  WeatherCurrentResponse? _currentWeather;
+  LocationSearchResponse? _locationSelected;
+  WeatherResponse? _currentWeather;
 
 
   @override
@@ -45,9 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          WeatherBackground(weather: _currentWeather),
+          WeatherBackground(localTime: dateTimeOrNull(_currentWeather?.location?.localtime)),
           SingleChildScrollView(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                   margin: EdgeInsets.only(top: context.safeTopHeight + 32),
@@ -62,7 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 WeatherLocationInfo(info: _currentWeather?.location),
                 (context.sh * .05).vBox,
                 WeatherTempInfo(info: _currentWeather?.current),
-                WeatherForecastWidget()
+                (context.sh * .07).vBox,
+                WeatherForecastWidget(forecast: _currentWeather?.forecast),
               ],
             ),
           ),
@@ -94,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
       debugPrint("[Error] when getCurrentWeather: $e");
     }
   }
-  Future<List<WeatherSearchResponse>> search(String str) async {
+  Future<List<LocationSearchResponse>> search(String str) async {
     if(str.isEmpty) return [];
     try {
       return await repo.searchLocation(str.withoutDiacritics);
@@ -104,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  _onLocationSelected(WeatherSearchResponse locationSelected){
+  _onLocationSelected(LocationSearchResponse locationSelected){
     _locationSelected = locationSelected;
     getCurrentWeather(locationSelected.lat ?? 0, locationSelected.lon ?? 0);
   }

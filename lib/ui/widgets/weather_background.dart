@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/data/entities/weather_current_response.dart';
 import 'package:weather_app/utils/common_functions.dart';
 
 import '../../utils/app_colors.dart';
 
 class WeatherBackground extends StatefulWidget {
   const WeatherBackground({super.key,
-    this.weather,
+    this.localTime,
     this.duration = const Duration(milliseconds: 300),
   });
 
-  final WeatherCurrentResponse? weather;
+  final DateTime? localTime;
   final Duration duration;
 
   @override
@@ -40,15 +39,15 @@ class _WeatherBackgroundState extends State<WeatherBackground> {
   @override
   void didUpdateWidget(WeatherBackground oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print('old : ${oldWidget.weather?.location?.localtimeEpoch}');
-    print('new : ${widget.weather?.location?.localtimeEpoch}');
-    if(oldWidget.weather?.location?.localtimeEpoch != widget.weather?.location?.localtimeEpoch){
+    print('old : ${oldWidget.localTime}');
+    print('new : ${widget.localTime}');
+    if(oldWidget.localTime?.microsecondsSinceEpoch != widget.localTime?.microsecondsSinceEpoch){
       initBgColor();
     }
   }
 
   initBgColor(){
-    final timeIndex = calculateTime(dateTimeOrNull(widget.weather?.location?.localtime) ?? DateTime.now());
+    final timeIndex = calculateTime(dateTimeOrNull(widget.localTime) ?? DateTime.now());
     startColor = timeColors[timeIndex];
     if(timeIndex == timeColors.length - 1){
       endColor = timeColors[0];
@@ -69,7 +68,6 @@ class _WeatherBackgroundState extends State<WeatherBackground> {
   }
   @override
   Widget build(BuildContext context) {
-    print('rebuild: - ${widget.weather?.location?.localtime}');
     return AnimatedContainer(
       duration: widget.duration,
       decoration: BoxDecoration(
