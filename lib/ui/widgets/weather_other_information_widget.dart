@@ -21,7 +21,7 @@ class WeatherOtherInformationWidget extends StatelessWidget {
           _InfoItem(
               title: 'Real feel',
               value: currentWeather?.feelslikeC ?? 0,
-              unit: getDegreeSymbol(TempDegreeMode.c,noCharUnit: true),
+              unit: getDegreeSymbol(TempUnit.c,noCharUnit: true),
           ),
           _InfoItem(title:'UV', value: currentWeather?.uv ?? 0),
           _InfoItem(

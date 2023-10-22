@@ -28,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final repo = WeatherRepository(WeatherAPIClient.instance);
   final searchCtl = TextEditingController();
   late final ScaffoldMessengerState _scaffoldKey;
+  late final ValueNotifier<bool> weatherUpdatingNotifier;
+
 
   /// * data
   final List<LocationSearchResponse> currentSearchResults = [];
@@ -39,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    weatherUpdatingNotifier = ValueNotifier<bool>(false);
     getCurrentPosition();
   }
 
@@ -49,28 +52,54 @@ class _HomeScreenState extends State<HomeScreen> {
         fit: StackFit.expand,
         children: [
           WeatherBackground(localTime: dateTimeOrNull(_currentWeather?.location?.localtime)),
-          SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: context.safeTopHeight + 32),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SearchWeatherTextField(
-                    controller: searchCtl,
-                    onSearch: search,
-                    onItemSelect: _onLocationSelected,
+          RefreshIndicator(
+            onRefresh: () async {
+              getCurrentWeather(
+                  _locationSelected?.lat ?? _userPosition?.latitude ?? 0,
+                  _locationSelected?.lon ?? _userPosition?.longitude ?? 0,
+              );
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: context.safeTopHeight + 32),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: SearchWeatherTextField(
+                      controller: searchCtl,
+                      onSearch: search,
+                      onItemSelect: _onLocationSelected,
+                    ),
                   ),
-                ),
-                (context.sh * .05).vBox,
-                WeatherLocationInfo(info: _currentWeather?.location),
-                (context.sh * .05).vBox,
-                WeatherTempInfo(info: _currentWeather?.current),
-                (context.sh * .07).vBox,
-                WeatherForecastWidget(forecast: _currentWeather?.forecast),
-                WeatherHoursForecastWidget(key: UniqueKey(),hours: _currentWeather?.forecast?.forecastDay.firstOrNull?.hour ?? []),
-                WeatherOtherInformationWidget(currentWeather: _currentWeather?.current),
-              ],
+                  ValueListenableBuilder(
+                    valueListenable: weatherUpdatingNotifier,
+                    builder: (context, updating, _) {
+                      return AnimatedContainer(
+                        height: updating ? null : 0,
+                        duration: const Duration(milliseconds: 300),
+                        margin: updating ? const EdgeInsets.only(top: 30): null,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(height: 10,width: 10,child: CircularProgressIndicator.adaptive(backgroundColor: Colors.white)),
+                            12.hBox,
+                            Text('Upadting...',style: context.textTheme.titleSmall),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  (context.sh * .03).vBox,
+                  WeatherLocationInfo(info: _currentWeather?.location),
+                  (context.sh * .05).vBox,
+                  WeatherTempInfo(info: _currentWeather?.current),
+                  (context.sh * .07).vBox,
+                  WeatherForecastWidget(forecast: _currentWeather?.forecast),
+                  WeatherHoursForecastWidget(key: UniqueKey(),hours: _currentWeather?.forecast?.forecastDay.firstOrNull?.hour ?? []),
+                  WeatherOtherInformationWidget(currentWeather: _currentWeather?.current),
+                ],
+              ),
             ),
           ),
         ],
@@ -90,15 +119,19 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
   Future<void> getCurrentWeather(num lat, num lng) async {
+    weatherUpdatingNotifier.value = true;
     try{
       return await repo.getWeatherByLatLng(lat, lng).then((res){
         if(res != null){
           _currentWeather = res;
           setState(() {});
         }
+        weatherUpdatingNotifier.value = false;
       });
     } catch (e){
       debugPrint("[Error] when getCurrentWeather: $e");
+    } finally{
+      weatherUpdatingNotifier.value = false;
     }
   }
   Future<List<LocationSearchResponse>> search(String str) async {

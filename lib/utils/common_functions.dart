@@ -30,10 +30,10 @@ String addSchemeImgHost(String? url){
   return 'https:$url';
 }
 
-String getDegreeSymbol(TempDegreeMode mode, {bool noCharUnit = false}){
+String getDegreeSymbol(TempUnit mode, {bool noCharUnit = false}){
   if(noCharUnit) return '\u00B0';
   switch(mode){
-    case TempDegreeMode.f: return '\u2109';
+    case TempUnit.f: return '\u2109';
     default: return '\u2103';
   }
 }
