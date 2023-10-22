@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:weather_app/data/entities/weather_response.dart';
+import 'package:weather_app/provider/setting_provider.dart';
 import 'package:weather_app/ui/widgets/info_container.dart';
 import 'package:weather_app/utils/common_functions.dart';
 import 'package:weather_app/utils/extension/context_extension.dart';
@@ -14,7 +16,9 @@ class WeatherOtherInformationWidget extends StatelessWidget {
     return WeatherInfoContainer(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(12),
-      child: Column(
+      child: Consumer<SettingProvider>(
+  builder: (context, provider, _) {
+    return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           _InfoItem(title:'Humidity', value: currentWeather?.humidity ?? 0,unit:'%'),
@@ -26,19 +30,21 @@ class WeatherOtherInformationWidget extends StatelessWidget {
           _InfoItem(title:'UV', value: currentWeather?.uv ?? 0),
           _InfoItem(
             title: 'Pressure',
-            value: currentWeather?.pressureMb ?? 0,
-            unit: 'mbar',
+            value:provider.atmNum(currentWeather?.pressureMb, currentWeather?.pressureIn),
+            unit: provider.aUnit.name,
             unitStyle: context.textTheme.titleMedium?.copyWith(color: Colors.white),
           ),
           _InfoItem(
             title: 'Wind',
-            value: currentWeather?.pressureMb ?? 0,
-            unit: 'mph',
+            value: provider.windNum(currentWeather?.windKph, currentWeather?.windMph),
+            unit: provider.wUnit.name,
             unitStyle: context.textTheme.titleMedium?.copyWith(color: Colors.white),
           ),
           _InfoItem(title:'Cloud', value: currentWeather?.cloud ?? 0,unit:'%',hasDivider: false),
         ],
-      ),
+      );
+  },
+),
     );
   }
 }

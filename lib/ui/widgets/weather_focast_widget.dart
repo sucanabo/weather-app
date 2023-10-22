@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:weather_app/data/entities/weather_response.dart';
+import 'package:weather_app/provider/setting_provider.dart';
 import 'package:weather_app/utils/extension/context_extension.dart';
 import 'package:weather_app/utils/extension/date_time_extension.dart';
 import 'package:weather_app/utils/extension/widget_extension.dart';
@@ -80,10 +82,10 @@ class _ForecastItem extends StatelessWidget {
         ),
         Text.rich(
           TextSpan(
-            text: '${forecastItem.day?.mintempC}',
+            text: removeZeroDouble(context.read<SettingProvider>().degree(forecastItem.day?.mintempC, forecastItem.day?.mintempF)),
             children: [
               const TextSpan(text:' / '),
-              TextSpan(text:'${forecastItem.day?.maxtempC}'),
+              TextSpan(text:removeZeroDouble(context.read<SettingProvider>().degree(forecastItem.day?.maxtempC, forecastItem.day?.maxtempF))),
             ]
           )
         )

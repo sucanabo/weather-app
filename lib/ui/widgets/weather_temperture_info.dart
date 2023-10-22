@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:weather_app/data/entities/weather_response.dart';
+import 'package:weather_app/provider/setting_provider.dart';
 import 'package:weather_app/ui/widgets/temp_widget.dart';
 import 'package:weather_app/utils/extension/context_extension.dart';
 import 'package:weather_app/utils/extension/widget_extension.dart';
@@ -16,7 +18,12 @@ class WeatherTempInfo extends StatelessWidget {
       alignment: Alignment.center,
       child: Column(
         children: [
-          TempWidget(temp: info?.tempC ?? 0,tempSize: 110),
+          TempWidget(
+              temp: Provider.of<SettingProvider>(context).degree(
+                info?.tempC,
+                info?.tempF,
+              ),
+              tempSize: 110),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [

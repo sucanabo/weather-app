@@ -29,7 +29,12 @@ String addSchemeImgHost(String? url){
   if(url == null || url.isEmpty || !url.contains('//cdn.weatherapi.com')) return '';
   return 'https:$url';
 }
-
+num getDegree(TempUnit mode,num? cV,num? fV){
+  switch(mode){
+    case TempUnit.f: return fV??0;
+    default: return cV??0;
+  }
+}
 String getDegreeSymbol(TempUnit mode, {bool noCharUnit = false}){
   if(noCharUnit) return '\u00B0';
   switch(mode){

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:weather_app/provider/setting_provider.dart';
 import 'package:weather_app/utils/common_functions.dart';
 class TempWidget extends StatelessWidget {
   const TempWidget({
@@ -34,7 +36,7 @@ class TempWidget extends StatelessWidget {
           top: tempSize*.01,
           right: supRight ?? -(tempSize*.5),
           child: Text(
-            '\u2103',
+            getDegreeSymbol(context.read<SettingProvider>().tUnit),
             style: supTextStyle ?? TextStyle(
               fontSize: tempSize * .5,
               color: Colors.white,

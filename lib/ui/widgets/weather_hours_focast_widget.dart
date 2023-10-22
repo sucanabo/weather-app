@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:weather_app/data/entities/weather_response.dart';
 import 'package:weather_app/ui/widgets/info_container.dart';
 import 'package:weather_app/ui/widgets/temp_widget.dart';
@@ -6,6 +7,7 @@ import 'package:weather_app/utils/extension/context_extension.dart';
 import 'package:weather_app/utils/extension/date_time_extension.dart';
 import 'package:weather_app/utils/extension/widget_extension.dart';
 
+import '../../provider/setting_provider.dart';
 import '../../utils/common_functions.dart';
 class WeatherHoursForecastWidget extends StatefulWidget {
   const WeatherHoursForecastWidget({super.key,this.hours = const []});
@@ -40,7 +42,7 @@ class _WeatherHoursForecastWidgetState extends State<WeatherHoursForecastWidget>
           (100 + 8) * (activeIndex ?? 0).toDouble(),
           duration: const Duration(milliseconds: 100),
           curve: Curves.linear,
-        ).then((value) => setState((){}));
+        ).then((value) => mounted ?setState((){}) : null);
       });
     }
    int findCurrentHour(){
@@ -136,7 +138,7 @@ class _ForecastItem extends StatelessWidget {
             ),
           ),
           TempWidget(
-            temp: hour.tempC ?? 0,
+            temp: context.read<SettingProvider>().degree(hour.tempC, hour.tempF),
             tempSize: 16,
             supRight: -16,
             tempTextStyle: context.textTheme.titleSmall?.copyWith(color: Colors.white),

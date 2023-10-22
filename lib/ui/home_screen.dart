@@ -47,64 +47,71 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          WeatherBackground(localTime: dateTimeOrNull(_currentWeather?.location?.localtime)),
-          RefreshIndicator(
-            onRefresh: () async {
-              getCurrentWeather(
-                  _locationSelected?.lat ?? _userPosition?.latitude ?? 0,
-                  _locationSelected?.lon ?? _userPosition?.longitude ?? 0,
-              );
-            },
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: context.safeTopHeight + 32),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: SearchWeatherTextField(
-                      controller: searchCtl,
-                      onSearch: search,
-                      onItemSelect: _onLocationSelected,
+    return Theme(
+      data: Theme.of(context).copyWith(
+        textTheme: Theme.of(context).textTheme.apply(
+          bodyColor: Colors.white.withOpacity(0.7),
+        )
+      ),
+      child: Scaffold(
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            WeatherBackground(localTime: dateTimeOrNull(_currentWeather?.location?.localtime)),
+            RefreshIndicator(
+              onRefresh: () async {
+                getCurrentWeather(
+                    _locationSelected?.lat ?? _userPosition?.latitude ?? 0,
+                    _locationSelected?.lon ?? _userPosition?.longitude ?? 0,
+                );
+              },
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: context.safeTopHeight + 32),
+                      padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(right: 0),
+                      child: SearchWeatherTextField(
+                        controller: searchCtl,
+                        onSearch: search,
+                        onItemSelect: _onLocationSelected,
+                      ),
                     ),
-                  ),
-                  ValueListenableBuilder(
-                    valueListenable: weatherUpdatingNotifier,
-                    builder: (context, updating, _) {
-                      return AnimatedContainer(
-                        height: updating ? null : 0,
-                        duration: const Duration(milliseconds: 300),
-                        margin: updating ? const EdgeInsets.only(top: 30): null,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const SizedBox(height: 10,width: 10,child: CircularProgressIndicator.adaptive(backgroundColor: Colors.white)),
-                            12.hBox,
-                            Text('Upadting...',style: context.textTheme.titleSmall),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  (context.sh * .03).vBox,
-                  WeatherLocationInfo(info: _currentWeather?.location),
-                  (context.sh * .05).vBox,
-                  WeatherTempInfo(info: _currentWeather?.current),
-                  (context.sh * .07).vBox,
-                  WeatherForecastWidget(forecast: _currentWeather?.forecast),
-                  WeatherHoursForecastWidget(key: UniqueKey(),hours: _currentWeather?.forecast?.forecastDay.firstOrNull?.hour ?? []),
-                  WeatherOtherInformationWidget(currentWeather: _currentWeather?.current),
-                ],
+                    ValueListenableBuilder(
+                      valueListenable: weatherUpdatingNotifier,
+                      builder: (context, updating, _) {
+                        return AnimatedContainer(
+                          height: updating ? null : 0,
+                          duration: const Duration(milliseconds: 300),
+                          margin: updating ? const EdgeInsets.only(top: 30): null,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(height: 10,width: 10,child: CircularProgressIndicator.adaptive(backgroundColor: Colors.white)),
+                              12.hBox,
+                              Text('Updating...',style: context.textTheme.titleSmall),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    (context.sh * .03).vBox,
+                    WeatherLocationInfo(info: _currentWeather?.location),
+                    (context.sh * .05).vBox,
+                    WeatherTempInfo(info: _currentWeather?.current),
+                    (context.sh * .07).vBox,
+                    WeatherForecastWidget(forecast: _currentWeather?.forecast),
+                    WeatherHoursForecastWidget(key: UniqueKey(),hours: _currentWeather?.forecast?.forecastDay.firstOrNull?.hour ?? []),
+                    WeatherOtherInformationWidget(currentWeather: _currentWeather?.current),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    ).unFocusOutsideClick(context);
+          ],
+        ),
+      ).unFocusOutsideClick(context),
+    );
   }
 
   Future<void> getCurrentPosition() async {
