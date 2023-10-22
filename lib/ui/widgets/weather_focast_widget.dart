@@ -47,7 +47,9 @@ class WeatherForecastWidget extends StatelessWidget {
             itemCount: forecast?.forecastDay.length ?? 0,
           ),
           10.vBox,
-          FilledButton(onPressed: (){}, child: const Text('More Details')),
+          FilledButton(onPressed: (){
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Developing. Coming soon.')));
+          }, child: const Text('More Details')),
         ],
       ),
     );
