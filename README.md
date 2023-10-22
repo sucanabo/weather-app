@@ -82,4 +82,4 @@ The following packages are used in this project:
 - `flutter_launcher_icons`: A generator for create Application Icon.
 
 ## :cloud: Credits
-API: OpenWeatherAPI  weatherapi-com
+API: [weatherapi-com](https:/www.weatherapi.com)
