@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
         textTheme: Theme.of(context).textTheme.apply(
-          bodyColor: Colors.white.withOpacity(0.5),
+          bodyColor: Colors.white.withOpacity(0.7),
         ),
         
       ),

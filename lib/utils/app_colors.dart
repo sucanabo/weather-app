@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
 class AppColors{
   const AppColors._();
@@ -8,4 +8,6 @@ class AppColors{
   static const Color lateAfternoonColor = Color(0xff646ebd);
   static const Color eveningColor = Color(0xff59238c);
   static const Color nightColor = Color(0xff211e21);
+
+  static Color infoContainer = Colors.white.withOpacity(.3);
 }

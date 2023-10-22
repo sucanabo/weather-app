@@ -6,6 +6,7 @@ import 'package:weather_app/data/weather_repository.dart';
 import 'package:weather_app/ui/widgets/search_weather_text_field.dart';
 import 'package:weather_app/ui/widgets/weather_focast_widget.dart';
 import 'package:weather_app/ui/widgets/weather_hours_focast_widget.dart';
+import 'package:weather_app/ui/widgets/weather_other_information_widget.dart';
 import 'package:weather_app/ui/widgets/weather_temperture_info.dart';
 import 'package:weather_app/utils/common_functions.dart';
 import 'package:weather_app/utils/diacritics_util.dart';
@@ -67,8 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 WeatherTempInfo(info: _currentWeather?.current),
                 (context.sh * .07).vBox,
                 WeatherForecastWidget(forecast: _currentWeather?.forecast),
-                WeatherHoursForecastWidget(hours: _currentWeather?.forecast?.forecastDay.firstOrNull?.hour ?? []),
-                const SizedBox(height: 50),
+                WeatherHoursForecastWidget(key: UniqueKey(),hours: _currentWeather?.forecast?.forecastDay.firstOrNull?.hour ?? []),
+                WeatherOtherInformationWidget(currentWeather: _currentWeather?.current),
               ],
             ),
           ),

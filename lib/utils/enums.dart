@@ -1,0 +1,1 @@
+enum TempDegreeMode{c,f}

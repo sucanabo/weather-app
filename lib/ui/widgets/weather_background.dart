@@ -39,8 +39,6 @@ class _WeatherBackgroundState extends State<WeatherBackground> {
   @override
   void didUpdateWidget(WeatherBackground oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print('old : ${oldWidget.localTime}');
-    print('new : ${widget.localTime}');
     if(oldWidget.localTime?.microsecondsSinceEpoch != widget.localTime?.microsecondsSinceEpoch){
       initBgColor();
     }

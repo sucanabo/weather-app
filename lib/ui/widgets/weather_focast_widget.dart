@@ -5,19 +5,15 @@ import 'package:weather_app/utils/extension/date_time_extension.dart';
 import 'package:weather_app/utils/extension/widget_extension.dart';
 
 import '../../utils/common_functions.dart';
+import 'info_container.dart';
 class WeatherForecastWidget extends StatelessWidget {
   const WeatherForecastWidget({super.key,required this.forecast});
   final Forecast? forecast;
   @override
   Widget build(BuildContext context) {
     if(forecast?.forecastDay == null || forecast!.forecastDay.isEmpty) return const SizedBox.shrink();
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
+    return WeatherInfoContainer(
       height: forecast!.forecastDay.isEmpty ? 0 : null,
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.3),
-        borderRadius: BorderRadius.circular(12),
-      ),
       margin: const EdgeInsets.symmetric(horizontal: 12),
       padding: const EdgeInsets.all(12).copyWith(bottom: 16),
       child: Column(

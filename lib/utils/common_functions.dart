@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import 'enums.dart';
+
 DateTime? dateTimeOrNull(dynamic val){
     try{
       if(val == null) return null;
@@ -26,4 +28,12 @@ String removeZeroDouble(num number){
 String addSchemeImgHost(String? url){
   if(url == null || url.isEmpty || !url.contains('//cdn.weatherapi.com')) return '';
   return 'https:$url';
+}
+
+String getDegreeSymbol(TempDegreeMode mode, {bool noCharUnit = false}){
+  if(noCharUnit) return '\u00B0';
+  switch(mode){
+    case TempDegreeMode.f: return '\u2109';
+    default: return '\u2103';
+  }
 }
