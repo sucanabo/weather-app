@@ -7,7 +7,7 @@ Beautiful Flutter weather application. Entirely written in Dart and Flutter. App
 
 ### :camera: Media
 <p align="center">
-<img src="https://github.com/sucanabo/weather-app/blob/main/media/preview" width="250px">
+<img src="https://github.com/sucanabo/weather-app/blob/main/media/preview.gif" width="250px">
 </p>
 
 <table>
@@ -23,8 +23,6 @@ Beautiful Flutter weather application. Entirely written in Dart and Flutter. App
     </td>
     <td>
        <img width="250px" src="https://github.com/sucanabo/weather-app/blob/main/media/img_4.jpg">
-    </td>
-     <td>
     </td>
   </tr>
 </table>
